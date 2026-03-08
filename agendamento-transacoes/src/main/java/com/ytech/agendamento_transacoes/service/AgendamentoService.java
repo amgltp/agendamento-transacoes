@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 
 @Service("agendamento-service")
@@ -50,7 +51,7 @@ public class AgendamentoService {
         t.setValorTotal(taxa);
 
         t.setDataAgendamento(transacao.getDataAgendamento());
-        t.setStatusTransacao(AgendamentoTransacao.StatusTransacao.CRIADA);
+        t.setStatusTransacao(AgendamentoTransacao.StatusTransacao.ACEITE);
         agendamentoRepository.save(t);
     }
 
@@ -108,4 +109,7 @@ public class AgendamentoService {
     }
 
 
+    public Optional<AgendamentoTransacao> pesquisarPorId(long id) {
+        return agendamentoRepository.findById(id);
+    }
 }

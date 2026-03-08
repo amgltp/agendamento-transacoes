@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping(value = "/agendamento")
@@ -26,7 +28,7 @@ public class AgendamentoController {
     ){
         Page<AgendamentoTransacao> transacoes = agendamentoService.consultarTodasTransacoes(pageable);
         if(!transacoes.isEmpty()){
-            log.info("Transacoes agendadas encontradas");
+            log.info("Transaçoes agendadas encontradas");
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(transacoes);
@@ -41,6 +43,31 @@ public class AgendamentoController {
     public ResponseEntity<AgendamentoTransacao> incluir(@Valid @RequestBody AgendamentoTransacao agendamentoTransacao){
         agendamentoService.incluir(agendamentoTransacao);
         return ResponseEntity.status(HttpStatus.CREATED).body(agendamentoTransacao);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AgendamentoTransacao> alterar( @PathVariable("id") long id,
+                                                         @Valid @RequestBody AgendamentoTransacao agendamentoTransacao){
+
+        Optional<AgendamentoTransacao> agendamentoTransacaoEncontrado = agendamentoService.pesquisarPorId(id);
+
+        if(agendamentoTransacaoEncontrado.isPresent()){
+            agendamentoService.alterarTransacao(id, agendamentoTransacao);
+            return ResponseEntity.ok(agendamentoTransacao);
+        }
+        return ResponseEntity.notFound().build();
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable("id") long id){
+        Optional<AgendamentoTransacao> agendamentoTransacaoEncontrado = agendamentoService.pesquisarPorId(id);
+        if(agendamentoTransacaoEncontrado.isPresent()){
+            agendamentoService.eliminar(id);
+            return ResponseEntity.noContent().build();
+
+        }
+        return ResponseEntity.notFound().build();
     }
 
     private AgendamentoService agendamentoService;
