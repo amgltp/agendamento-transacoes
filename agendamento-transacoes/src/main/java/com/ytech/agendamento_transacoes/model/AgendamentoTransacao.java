@@ -17,6 +17,9 @@ import java.time.LocalDate;
 
 public class AgendamentoTransacao {
 
+    public static final BigDecimal LIMITE_1000 = new BigDecimal("1000");
+    public static final BigDecimal LIMITE_2000 = new BigDecimal("2000");
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,12 +31,9 @@ public class AgendamentoTransacao {
     private String contaDestino;
 
     @Column(nullable = false, precision = 15, scale = 2)
-    private BigDecimal taxa;
-
-    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal valor;
 
-    @Column(nullable = false, precision = 15, scale = 2)
+    @Column(nullable = true, precision = 15, scale = 2)
     private BigDecimal valorTotal;
 
     @Column(nullable = false , updatable = false)
