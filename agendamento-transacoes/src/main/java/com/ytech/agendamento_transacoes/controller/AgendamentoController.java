@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -23,17 +24,19 @@ import java.util.Optional;
 public class AgendamentoController {
 
     @GetMapping
-    public ResponseEntity<Page<AgendamentoTransacao>> consultar(
-            @PageableDefault(size = 1, sort = "dataAgendamento" , direction = Sort.Direction.DESC) Pageable pageable
-    ){
-        Page<AgendamentoTransacao> transacoes = agendamentoService.consultarTodasTransacoes(pageable);
+    public ResponseEntity<List<AgendamentoTransacao>> consultar(){
+
+        List<AgendamentoTransacao> transacoes =
+                agendamentoService.consultarTodasTransacoes();
+
         if(!transacoes.isEmpty()){
-            log.info("Transaçoes agendadas encontradas");
+            log.info("Transações agendadas encontradas");
+
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(transacoes);
-
         }
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .contentType(MediaType.APPLICATION_JSON)
                 .build();
